@@ -10,23 +10,24 @@ class Convertir extends StatefulWidget {
 }
 
 class _ConvertirState extends State<Convertir> {
-
 /*
-       0-COP      1-      2
+        0-COP      1-USD      2-EUR
 
-0-COP
-
-
-1-USD
+0-COP     1       4000        5000 
 
 
-2-EUR
+1-USD  0.00025      1         1.25
+ 
+
+2-EUR  0.0002      0.8           1 
 
  */
 
-
-
-
+  List<List<double>> factor = [
+    [1, 4000, 5000],
+    [0.00025, 1, 1.25],
+    [0.0002, 0.8, 1]
+  ];
 
   bool pesoO = false;
   bool dolarO = false;
@@ -36,8 +37,11 @@ class _ConvertirState extends State<Convertir> {
   bool dolarD = false;
   bool euroD = false;
 
-  TextEditingController divA = TextEditingController();
-  TextEditingController divB = TextEditingController();
+  TextEditingController divA = TextEditingController(text: "0.0");
+  TextEditingController divB = TextEditingController(text: "0.0");
+
+  int indO = 0;
+  int indD = 0;
 
   void cambiarestadoO(String moneda) {
     if (moneda == 'P') {
@@ -45,21 +49,25 @@ class _ConvertirState extends State<Convertir> {
       if (pesoO == true) {
         dolarO = false;
         euroO = false;
+        indO = 0;
       }
     } else if (moneda == 'D') {
       dolarO = dolarO ? false : true;
       if (dolarO == true) {
         pesoO = false;
         euroO = false;
+        indO = 1;
       }
     } else if (moneda == 'E') {
       euroO = euroO ? false : true;
       if (euroO == true) {
         pesoO = false;
         dolarO = false;
+        indO = 2;
       }
     }
 
+    conversion();
     print(pesoO);
     setState(() {});
   }
@@ -70,35 +78,40 @@ class _ConvertirState extends State<Convertir> {
       if (pesoD == true) {
         dolarD = false;
         euroD = false;
+        indD = 0;
       }
     } else if (moneda == 'D') {
       dolarD = dolarD ? false : true;
       if (dolarD == true) {
         pesoD = false;
         euroD = false;
+        indD = 1;
       }
     } else if (moneda == 'E') {
       euroD = euroD ? false : true;
       if (euroD == true) {
         pesoD = false;
         dolarD = false;
+        indD = 2;
       }
     }
+
+    conversion();
 
     print(pesoD);
     setState(() {});
   }
 
   void valores(String p) {
+    if (divA.text == "0.0") divA.clear();
     divA.text = divA.text + p;
     conversion();
   }
 
   void conversion() {
-    if (pesoO && dolarD) {
-      double valorO = double.parse(divA.text);
-      divB.text = (valorO / 4800).toString();
-    }
+    double valorO = double.parse(divA.text);
+    print(factor[indD][indO]);
+    divB.text = (valorO * factor[indD][indO]).toString();
   }
 
   @override
@@ -236,8 +249,8 @@ class _ConvertirState extends State<Convertir> {
                     child: const Botones(valor: '0')),
                 GestureDetector(
                     onTap: () {
-                      divA.clear();
-                      divB.clear();
+                      divA.text = "0.0";
+                      divB.text = "0.0";
                     },
                     child: const Botones(valor: 'C')),
                 //Botones1(valor: 'RESET'),
