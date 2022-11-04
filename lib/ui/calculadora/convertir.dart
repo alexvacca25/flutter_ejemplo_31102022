@@ -10,6 +10,24 @@ class Convertir extends StatefulWidget {
 }
 
 class _ConvertirState extends State<Convertir> {
+
+/*
+       0-COP      1-      2
+
+0-COP
+
+
+1-USD
+
+
+2-EUR
+
+ */
+
+
+
+
+
   bool pesoO = false;
   bool dolarO = false;
   bool euroO = false;
